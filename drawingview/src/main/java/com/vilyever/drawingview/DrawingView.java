@@ -39,6 +39,7 @@ public class DrawingView extends RelativeLayout implements View.OnLayoutChangeLi
     private final DrawingView self = this;
 
     private static final int UnhandleAnyLayer = -1;
+    private OntouchListener ontouchListener;
 
     /* Constructors */
     public DrawingView(Context context) {
@@ -849,8 +850,7 @@ public class DrawingView extends RelativeLayout implements View.OnLayoutChangeLi
         /**
          * 第一只触摸的手指离开屏幕时，终止此轮触摸事件流继续绘制的许可
          */
-        if (maskAction == MotionEvent.ACTION_POINTER_UP
-            && event.getActionIndex() == 0) {
+        if (maskAction == MotionEvent.ACTION_POINTER_UP&& event.getActionIndex() == 0) {
             action = MotionEvent.ACTION_UP;
             setShouldHandleOnTouch(false);
         }
@@ -868,6 +868,7 @@ public class DrawingView extends RelativeLayout implements View.OnLayoutChangeLi
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 drawTouchEnd(event.getX(), event.getY());
+                if(ontouchListener!=null)ontouchListener.touch(true);
                 break;
         }
 
@@ -1661,5 +1662,10 @@ public class DrawingView extends RelativeLayout implements View.OnLayoutChangeLi
 
         handleLayer(UnhandleAnyLayer);
     }
-
+    public void setOntouchListener(OntouchListener ontouchListener){
+        this.ontouchListener = ontouchListener;
+    }
+    public interface OntouchListener{
+        void touch(boolean isTouchUp);
+    }
 }

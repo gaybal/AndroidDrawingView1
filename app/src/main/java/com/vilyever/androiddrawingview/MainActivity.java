@@ -8,7 +8,7 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity {
     private final MainActivity self = this;
 
-    private DrawingFragment drawingFragment;
+    private DrawingFragment1 drawingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +42,11 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public DrawingFragment getDrawingFragment() {
+    public DrawingFragment1 getDrawingFragment() {
         if (drawingFragment == null) {
-            drawingFragment = (DrawingFragment) getFragmentManager().findFragmentByTag("drawingFragment");
+            drawingFragment = (DrawingFragment1) getFragmentManager().findFragmentByTag("drawingFragment");
             if (drawingFragment == null) {
-                drawingFragment = new DrawingFragment();
+                drawingFragment = new DrawingFragment1();
             }
         }
         return drawingFragment;

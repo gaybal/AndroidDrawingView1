@@ -88,7 +88,6 @@ public class DrawingFragment extends Fragment {
                 self.redoButton.setEnabled(canRedo);
             }
         });
-
         self.drawingView.setInterceptTouchDelegate(new DrawingView.InterceptTouchDelegate() {
             @Override
             public void requireInterceptTouchEvent(DrawingView drawingView, boolean isIntercept) {
@@ -217,6 +216,7 @@ public class DrawingFragment extends Fragment {
         });
 
         self.thicknessButton = (Button) rootView.findViewById(R.id.thicknessButton);
+        thicknessButton.setVisibility(View.GONE);
         self.thicknessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
