@@ -2,6 +2,8 @@ package com.vilyever.drawingview.util;
 
 import android.view.MotionEvent;
 
+import java.io.Serializable;
+
 /**
  * RotationGestureDetector
  * AndroidDrawingView <com.vilyever.drawingview>
@@ -9,7 +11,7 @@ import android.view.MotionEvent;
  * Feature:
  * 旋转手势检测
  */
-public class RotationGestureDetector {
+public class RotationGestureDetector implements Serializable {
     private final RotationGestureDetector self = this;
 
     // 触摸ID不可用值

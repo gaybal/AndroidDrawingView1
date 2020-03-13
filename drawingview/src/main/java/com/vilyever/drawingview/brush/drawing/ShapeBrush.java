@@ -134,5 +134,19 @@ public abstract class ShapeBrush extends DrawingBrush {
             return makeFrameWithBrushSpace(drawingRect);
         }
     }
+    public Frame drawPath1(Canvas canvas, @NonNull DrawingPath drawingPath, @NonNull DrawingState state) {
+        updatePaint();
+
+            DrawingPoint beginPoint = drawingPath.getPoints().get(0);
+
+            RectF drawingRect = new RectF();
+
+            drawingRect.left = Math.min(beginPoint.getX(), beginPoint.getX()+40);
+            drawingRect.top = Math.min(beginPoint.getY(), beginPoint.getY()+40);
+            drawingRect.right = Math.max(beginPoint.getX(), beginPoint.getX()+40);
+            drawingRect.bottom = Math.max(beginPoint.getY(), beginPoint.getY()+40);
+
+            return makeFrameWithBrushSpace(drawingRect);
+    }
 
 }

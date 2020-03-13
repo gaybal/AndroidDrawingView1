@@ -13,6 +13,8 @@ import com.vilyever.drawingview.model.DrawingPath;
 import com.vilyever.jsonmodel.Json;
 import com.vilyever.jsonmodel.JsonModel;
 
+import java.io.Serializable;
+
 /**
  * Brush
  * AndroidDrawingView <com.vilyever.drawingview.brush>
@@ -25,7 +27,7 @@ import com.vilyever.jsonmodel.JsonModel;
  * {@link DrawingBrush}
  * {@link TextBrush}
  */
-public abstract class Brush extends JsonModel {
+public abstract class Brush extends JsonModel implements Serializable {
     final Brush self = this;
 
     /* Public Methods */

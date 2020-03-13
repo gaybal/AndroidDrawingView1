@@ -18,6 +18,7 @@ import com.vilyever.drawingview.model.DrawingLayer;
 import com.vilyever.drawingview.model.DrawingStep;
 import com.vilyever.unitconversion.DimenConverter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import java.util.List;
  * Feature:
  * image图层view，同步绘制，可任意对图层进行变换
  */
-public class DrawingLayerImageView extends ImageView implements DrawingLayerViewProtocol {
+public class DrawingLayerImageView extends ImageView implements DrawingLayerViewProtocol, Serializable {
     private final DrawingLayerImageView self = this;
 
     /**

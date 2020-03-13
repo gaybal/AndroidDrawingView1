@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import com.vilyever.drawingview.brush.Brush;
 import com.vilyever.drawingview.model.DrawingStep;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ import java.util.List;
  * Feature:
  * base底层view，同步绘制/异步绘制，不可移动变换
  */
-public class DrawingLayerBaseView extends ImageView implements Runnable, DrawingLayerViewProtocol {
+public class DrawingLayerBaseView extends ImageView implements Runnable, DrawingLayerViewProtocol , Serializable {
     private final DrawingLayerBaseView self = this;
 
     /* Constructors */

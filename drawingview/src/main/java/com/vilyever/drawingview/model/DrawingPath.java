@@ -2,6 +2,7 @@ package com.vilyever.drawingview.model;
 
 import com.vilyever.jsonmodel.JsonModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * 绘画数据：绘制路径
  * 由任意个{@link DrawingPoint}组成
  */
-public class DrawingPath extends JsonModel {
+public class DrawingPath extends JsonModel implements Serializable {
     private final DrawingPath self = this;
 
     /* #Constructors */

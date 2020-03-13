@@ -1,14 +1,28 @@
 package com.vilyever.androiddrawingview;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
 
 import com.vilyever.drawingview.DrawingView;
 import com.vilyever.drawingview.brush.drawing.ArrowBrush;
@@ -17,8 +31,6 @@ import com.vilyever.drawingview.brush.drawing.CircleBrush;
 import com.vilyever.drawingview.brush.drawing.DrawingBrush;
 import com.vilyever.drawingview.brush.drawing.LocationBrush;
 import com.vilyever.drawingview.brush.drawing.PenBrush;
-import com.vilyever.drawingview.brush.drawing.EllipseBrush;
-import com.vilyever.drawingview.brush.drawing.PolygonBrush;
 import com.vilyever.drawingview.brush.drawing.RectangleBrush;
 import com.vilyever.drawingview.brush.drawing.IsoscelesTriangleBrush;
 import com.vilyever.drawingview.brush.drawing.LineBrush;
@@ -32,11 +44,17 @@ import com.vilyever.drawingview.brush.drawing.TriangleStrokeBrush;
 import com.vilyever.drawingview.brush.text.TextBrush;
 import com.vilyever.drawingview.model.DrawingStep;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.UUID;
 
-public class DrawingFragment1 extends Fragment implements View.OnClickListener {
+import static android.content.ContentValues.TAG;
+
+public class DrawingFragment1 extends Fragment implements View.OnClickListener ,Spinner.OnItemSelectedListener{
     private final DrawingFragment1 self = this;
 
     private DrawingView drawingView;
@@ -45,11 +63,11 @@ public class DrawingFragment1 extends Fragment implements View.OnClickListener {
     private Button redoButton;
     private Button clearButton;
 
-    private Button penButton, rectButton, lineButton, dxButton, ydButton, ltButton, locationButton, arrowButton, isoTriangleButton, rightTriangleButton, circleButton;
+    private Button penButton, rectButton, lineButton, dxButton, ydButton, ltButton, arrowButton, isoTriangleButton, rightTriangleButton, circleButton;
     //    private Button shapeButton;
-    private Button textButton;
+    private Button textButton,saveButton,legendButton;
     private Button backgroundColorButton;
-
+    private Spinner locationSpinner;
     private Button thicknessButton;
     private Button eraserButton;
     private Button colorButton;
@@ -78,12 +96,46 @@ public class DrawingFragment1 extends Fragment implements View.OnClickListener {
     SquareBrush squareBrush;
     TriangleStrokeBrush triangleStrokeBrush;
     TriangleBrush triangleBrush;
+    RelativeLayout legend;
+    int locationNum = 1;
     public DrawingFragment1() {
     }
-
+    boolean showLegendTv = false;
+Handler handler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            switch (msg.what){
+                case 0:
+                    try {
+                        for (int i = 0; i < checkedItems.length; i++) {
+                            if (checkedItems[i]) {
+                                showLegendTv = true;
+                                break;
+                            }
+                        }
+                        legend.findViewById(R.id.tv_legend).setVisibility(showLegendTv ?View.VISIBLE:View.GONE);
+                        legend.findViewById(R.id.ll_yd).setVisibility(checkedItems[0]?View.VISIBLE:View.GONE);
+                        legend.findViewById(R.id.ll_lt).setVisibility(checkedItems[1]?View.VISIBLE:View.GONE);
+                        legend.findViewById(R.id.ll_dx).setVisibility(checkedItems[2]?View.VISIBLE:View.GONE);
+                        legend.findViewById(R.id.ll_arrow).setVisibility(checkedItems[3]?View.VISIBLE:View.GONE);
+                        drawingView.addView(legend);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) legend.getLayoutParams();
+                        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                        showLegendTv = false;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 1:
+                    break;
+            }
+        }
+    };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.drawing_fragment1, container, false);
+        legend = (RelativeLayout) LayoutInflater.from(getActivity()).inflate(R.layout.legend, null);
         self.drawingView = (DrawingView) rootView.findViewById(R.id.drawingView);
         self.undoButton = (Button) rootView.findViewById(R.id.undoButton);
         self.undoButton.setEnabled(false);
@@ -107,6 +159,8 @@ public class DrawingFragment1 extends Fragment implements View.OnClickListener {
 
         self.ydButton = (Button) rootView.findViewById(R.id.ydButton);
         self.ydButton.setOnClickListener(this);
+        self.legendButton = (Button) rootView.findViewById(R.id.legendButton);
+        self.legendButton.setOnClickListener(this);
         self.ltButton = (Button) rootView.findViewById(R.id.ltButton);
         self.ltButton.setOnClickListener(this);
         self.dxButton = (Button) rootView.findViewById(R.id.dxButton);
@@ -121,10 +175,12 @@ public class DrawingFragment1 extends Fragment implements View.OnClickListener {
         self.isoTriangleButton.setOnClickListener(this);
         self.arrowButton = (Button) rootView.findViewById(R.id.arrowButton);
         self.arrowButton.setOnClickListener(this);
-        self.locationButton = (Button) rootView.findViewById(R.id.locationButton);
-        self.locationButton.setOnClickListener(this);
+        self.locationSpinner = (Spinner) rootView.findViewById(R.id.locationSpinner);
+        locationSpinner.setOnItemSelectedListener(this);
         self.circleButton = (Button) rootView.findViewById(R.id.circleButton);
         self.circleButton.setOnClickListener(this);
+        self.saveButton = (Button) rootView.findViewById(R.id.saveButton);
+        self.saveButton.setOnClickListener(this);
         initData();
         return rootView;
     }
@@ -170,10 +226,9 @@ public class DrawingFragment1 extends Fragment implements View.OnClickListener {
         self.singleSelectionButtons.add(self.isoTriangleButton);
         self.singleSelectionButtons.add(self.rightTriangleButton);
         self.singleSelectionButtons.add(self.arrowButton);
-        self.singleSelectionButtons.add(self.locationButton);
         self.singleSelectionButtons.add(self.circleButton);
         self.singleSelectionButtons.add(self.eraserButton);
-//        self.singleSelectionButtons.add(self.textButton);
+
         self.drawingView.setUndoRedoStateDelegate(new DrawingView.UndoRedoStateDelegate() {
             @Override
             public void onUndoRedoStateChange(DrawingView drawingView, boolean canUndo, boolean canRedo) {
@@ -213,10 +268,38 @@ public class DrawingFragment1 extends Fragment implements View.OnClickListener {
                 return null;
             }
         });
-//        self.getThicknessAdjustController().setThickness((int) self.penBrush.getSize());
-//        self.getThicknessAdjustController().popupFromView(v, BasePopupController.PopupDirection.Left, true, 0, 0);
+        drawingView.setOntouchListener(new DrawingView.OntouchListener() {
+            @Override
+            public void touch(boolean isTouchUp) {
+                locationNum++;
+                self.locationBrush.setNum(locationNum);
+            }
+        });
+        getBackground();
+    }
+    private void getBackground() {
+        try {
+            String picName = SharedPreferencesUtils.getString(getActivity(), "picName", null);
+            if (!TextUtils.isEmpty(picName)) {
+                FileInputStream fs = new FileInputStream("/sdcard/aa/"+picName);
+                Bitmap bitmap  = BitmapFactory.decodeStream(fs);
+                Drawable drawable = new BitmapDrawable(bitmap);
+                drawingView.setBackground(drawable);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+    private void setBackground() {
+        try {
+            drawingView.setBackgroundColor(Color.WHITE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    float size = -1;
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -227,9 +310,16 @@ public class DrawingFragment1 extends Fragment implements View.OnClickListener {
                 self.drawingView.redo();
                 break;
             case R.id.clearButton:
+                setBackground();
                 self.drawingView.clear();
+                drawingView.removeView(legend);
+//                drawingView.setDrawingStepDelegate(null);
                 break;
             case R.id.penButton:
+                self.penBrush.setIsEraser(false);
+                if (size!=-1) {
+                self.penBrush.setSize(size);
+                }
                 self.selectButton(self.singleSelectionButtons, self.penButton);
                 self.drawingView.setBrush(self.penBrush);
                 break;
@@ -238,6 +328,7 @@ public class DrawingFragment1 extends Fragment implements View.OnClickListener {
                 self.drawingView.setBrush(self.textBrush);
                 break;
             case R.id.eraserButton:
+                size = penBrush.getSize();
                 self.selectButton(self.singleSelectionButtons, self.eraserButton);
                 self.penBrush.setIsEraser(true);
                 self.penBrush.setSize(15);
@@ -274,10 +365,6 @@ public class DrawingFragment1 extends Fragment implements View.OnClickListener {
                 self.selectButton(self.singleSelectionButtons, self.rectButton);
                 self.drawingView.setBrush(self.rectangleBrush);
                 break;
-            case R.id.locationButton:
-                self.selectButton(self.singleSelectionButtons, self.locationButton);
-                self.drawingView.setBrush(self.locationBrush);
-                break;
             case R.id.isoTriangleButton:
                 self.selectButton(self.singleSelectionButtons, self.isoTriangleButton);
                 self.drawingView.setBrush(self.isoscelesTriangleBrush);
@@ -294,8 +381,52 @@ public class DrawingFragment1 extends Fragment implements View.OnClickListener {
                 self.selectButton(self.singleSelectionButtons, self.circleButton);
                 self.drawingView.setBrush(self.centerCircleBrush);
                 break;
+            case R.id.saveButton:
+                //避免保存时图片有键盘光标
+                self.selectButton(self.singleSelectionButtons, self.ydButton);
+                self.drawingView.setBrush(self.squareBrush);
+                savePic();
+                break;
+            case R.id.legendButton:
+                legendDialog();
+                break;
 
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        self.selectButton(self.singleSelectionButtons, null);
+        self.drawingView.setBrush(self.locationBrush);
+        locationNum = position + 1;
+        self.locationBrush.setNum(locationNum);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    boolean[] checkedItems;
+    private void legendDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("请选择要生成的图例！");
+        final String items[] = {"移动","联通","电信","箭头"};
+        checkedItems = new boolean[]{false,false,false,false};
+        builder.setMultiChoiceItems(items, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+            }
+        });
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                drawingView.removeView(legend);
+                handler.sendEmptyMessage(0);
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 
     @Override
@@ -303,27 +434,66 @@ public class DrawingFragment1 extends Fragment implements View.OnClickListener {
         super.onDestroy();
     }
 
-    /* #Accessors */
-    public ThicknessAdjustController getThicknessAdjustController() {
-        if (self.thicknessAdjustController == null) {
-            self.thicknessAdjustController = new ThicknessAdjustController(self.getActivity());
-            self.thicknessAdjustController.setThicknessDelegate(new ThicknessAdjustController.ThicknessDelegate() {
-                @Override
-                public void thicknessDidChangeFromThicknessAdjustController(ThicknessAdjustController controller, int thickness) {
-                    self.penBrush.setSize(thickness);
-                    self.textBrush.setSize(thickness);
-                    for (DrawingBrush brush : self.shapeBrushes) {
-                        brush.setSize(thickness);
-                    }
-                }
-            });
-        }
-        return thicknessAdjustController;
-    }
-
     private void selectButton(List<Button> buttons, Button button) {
         for (Button b : buttons) {
             b.setSelected(b == button);
+        }
+    }
+
+    private void savePic() {
+        /** 保存可编辑状态的示意图 */
+        File picPath = new File("/sdcard/aa/");
+        getFileDir("/sdcard/aa/");
+
+        UUID uuid = UUID.randomUUID();
+        drawingView.removeView(legend);
+        String nonFileName = uuid + ".png";
+        File nonEditPicFile = new File(picPath, nonFileName);
+        FileOutputStream efs = null;
+        try {
+            Bitmap mBitmap = viewConversionBitmap(drawingView);
+            if (mBitmap == null) return;
+            efs = new FileOutputStream(nonEditPicFile);
+            mBitmap.compress(Bitmap.CompressFormat.PNG, 100, efs);
+            SharedPreferencesUtils.saveString(getActivity(),"picName",nonFileName);
+        } catch (Exception e) {
+            Log.e(TAG, "Export error - " + e.getMessage());
+        } finally {
+            try {
+                if (efs != null) {
+                    efs.flush();
+                    efs.close();
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Export error - " + e.getMessage());
+            }
+        }
+    }
+    public Bitmap viewConversionBitmap(View v) {
+        int w = v.getWidth();
+        int h = v.getHeight();
+
+        Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bmp);
+
+        c.drawColor(Color.WHITE);
+        /** 如果不设置canvas画布为白色，则生成透明 */
+
+        v.layout(0, 0, w, h);
+        v.draw(c);
+
+        return bmp;
+    }
+    public void getFileDir(String path) {
+        // 创建文件夹
+        File file = null;
+        try {
+            file = new File(path);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+        } catch (Exception e) {
+            Log.i("error:", e + "");
         }
     }
 

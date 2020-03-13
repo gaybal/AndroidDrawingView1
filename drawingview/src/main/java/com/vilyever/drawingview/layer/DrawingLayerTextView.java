@@ -25,6 +25,7 @@ import com.vilyever.drawingview.model.DrawingLayer;
 import com.vilyever.drawingview.model.DrawingStep;
 import com.vilyever.unitconversion.DimenConverter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ import java.util.List;
  * Feature:
  * text图层view，展示可编辑输入框，可任意对图层进行变换
  */
-public class DrawingLayerTextView extends EditText implements DrawingLayerViewProtocol {
+public class DrawingLayerTextView extends EditText implements DrawingLayerViewProtocol , Serializable {
     final DrawingLayerTextView self = this;
 
     /**

@@ -2,6 +2,8 @@ package com.vilyever.drawingview.util;
 
 import com.vilyever.drawingview.model.DrawingPoint;
 
+import java.io.Serializable;
+
 /**
  * Bezier
  * AndroidDrawingView <com.vilyever.drawingview.util>
@@ -9,7 +11,7 @@ import com.vilyever.drawingview.model.DrawingPoint;
  * Feature:
  * 贝塞尔曲线计算
  */
-public class Bezier {
+public class Bezier implements Serializable {
     final Bezier self = this;
 
     /* #Constructors */

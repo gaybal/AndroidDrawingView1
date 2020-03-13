@@ -5,6 +5,8 @@ import android.widget.RelativeLayout;
 
 import com.vilyever.jsonmodel.JsonModel;
 
+import java.io.Serializable;
+
 /**
  * DrawingLayer
  * AndroidDrawingBoard <com.vilyever.drawingboard>
@@ -13,7 +15,7 @@ import com.vilyever.jsonmodel.JsonModel;
  * 绘画数据：图层数据
  * 每一层并不限制此类数据的数量
  */
-public class DrawingLayer extends JsonModel implements Comparable<DrawingLayer> {
+public class DrawingLayer extends JsonModel implements Comparable<DrawingLayer>, Serializable {
     private final DrawingLayer self = this;
 
     // 未设定的值

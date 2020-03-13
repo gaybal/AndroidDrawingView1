@@ -57,7 +57,7 @@ public abstract class DrawingBrush extends Brush {
     protected int color;
     public int getColor() {
         if (isEraser()) {
-            return Color.TRANSPARENT;
+            return Color.WHITE;
         }
         return this.color;
     }
@@ -149,7 +149,7 @@ public abstract class DrawingBrush extends Brush {
         getPaint().setColor(getColor());
 
         if (isEraser()) {
-            getPaint().setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+            getPaint().setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
         }
     }
 

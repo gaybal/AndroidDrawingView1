@@ -2,6 +2,7 @@ package com.vilyever.drawingview.model;
 
 import com.vilyever.jsonmodel.JsonModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * Created by vilyever on 2015/9/25.
  * Feature:
  */
-public class DrawingData extends JsonModel {
+public class DrawingData extends JsonModel implements Serializable {
     private final DrawingData self = this;
 
     /**

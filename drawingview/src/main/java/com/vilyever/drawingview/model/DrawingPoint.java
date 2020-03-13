@@ -2,6 +2,7 @@ package com.vilyever.drawingview.model;
 
 import com.vilyever.jsonmodel.JsonModel;
 
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -11,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Feature:
  * 绘画数据：绘制点
  */
-public class DrawingPoint extends JsonModel {
+public class DrawingPoint extends JsonModel implements Serializable {
     private final DrawingPoint self = this;
 
 

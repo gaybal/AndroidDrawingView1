@@ -12,6 +12,8 @@ import android.view.View;
 
 import com.vilyever.unitconversion.DimenConverter;
 
+import java.io.Serializable;
+
 /**
  * VDDrawingAnimationView
  * AndroidDrawingView <com.vilyever.drawingview.util>
@@ -19,7 +21,7 @@ import com.vilyever.unitconversion.DimenConverter;
  * Feature:
  * 绘制忙碌时显示的动画视图
  */
-public class DrawingAnimationView extends View {
+public class DrawingAnimationView extends View implements Serializable {
     final DrawingAnimationView self = this;
 
     private static final float AnimationRadius = DimenConverter.dpToPixel(25);

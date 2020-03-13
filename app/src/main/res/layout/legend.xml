@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/framer"
+    >
+    <TextView
+        android:id="@+id/tv_legend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="图例"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="16dp"/>
+<LinearLayout
+    android:id="@+id/ll_yd"
+    android:layout_below="@+id/tv_legend"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dp">
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/yd"/>
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="移动基站"/>
+</LinearLayout>
+<LinearLayout
+    android:id="@+id/ll_lt"
+    android:layout_below="@id/ll_yd"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dp">
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/lt"/>
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="联通基站"/>
+</LinearLayout>
+<LinearLayout
+    android:id="@+id/ll_dx"
+    android:layout_below="@id/ll_lt"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dp">
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/dx"/>
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="电信基站"/>
+</LinearLayout>
+<LinearLayout
+    android:id="@+id/ll_arrow"
+    android:layout_below="@id/ll_dx"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dp">
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/arrow"/>
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="发射方向"/>
+</LinearLayout>
+
+</RelativeLayout>

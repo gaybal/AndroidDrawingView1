@@ -10,6 +10,8 @@ import android.widget.RelativeLayout;
 
 import com.vilyever.drawingview.util.RotationGestureDetector;
 
+import java.io.Serializable;
+
 /**
  * VDDrawingLayerContainer
  * AndroidDrawingView <com.vilyever.drawingview.layer>
@@ -17,7 +19,7 @@ import com.vilyever.drawingview.util.RotationGestureDetector;
  * Feature:
  * 图层容器，管理除base图层以外的所有图层的触摸响应
  */
-public class DrawingLayerContainer extends RelativeLayout {
+public class DrawingLayerContainer extends RelativeLayout implements Serializable {
     final DrawingLayerContainer self = this;
 
     /* #Constructors */

@@ -59,7 +59,6 @@ public class PenBrush extends DrawingBrush {
             }
 
             DrawingPoint beginPoint = drawingPath.getPoints().get(0);
-            DrawingPoint lastPoint = drawingPath.getPoints().get(drawingPath.getPoints().size() - 1);
 
             Path path = new Path();
             if (drawingPath.getPoints().size() == 1) {

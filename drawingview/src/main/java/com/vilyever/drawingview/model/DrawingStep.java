@@ -7,6 +7,7 @@ import com.vilyever.drawingview.layer.DrawingLayerViewProtocol;
 import com.vilyever.jsonmodel.Json;
 import com.vilyever.jsonmodel.JsonModel;
 
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 
 /**
@@ -15,7 +16,7 @@ import java.lang.ref.WeakReference;
  * Created by vilyever on 2015/9/18.
  * Feature:
  */
-public class DrawingStep extends JsonModel {
+public class DrawingStep extends JsonModel implements Serializable {
     private final DrawingStep self = this;
 
     /* Constructors */

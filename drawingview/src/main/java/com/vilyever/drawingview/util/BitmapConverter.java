@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
+import java.io.Serializable;
+
 /**
  * BitmapConverter
  * AndroidDrawingView <com.vilyever.drawingview>
@@ -12,7 +14,7 @@ import android.graphics.drawable.Drawable;
  * Feature:
  * drawable转换bitmap
  */
-public class BitmapConverter {
+public class BitmapConverter implements Serializable {
     private final BitmapConverter self = this;
 
     /* Public Methods */
