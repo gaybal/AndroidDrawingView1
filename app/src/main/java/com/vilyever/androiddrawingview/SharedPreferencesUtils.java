@@ -3,15 +3,6 @@ package com.vilyever.androiddrawingview;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-/**
- * @Copyright: 2015 Beijing Safety Test Technology Co.,Ltd.
- * @time: 2015-10-15 下午2:04:23
- * @author: F.P.Y
- * @version: v1.0
- * @description: 缓存数据工具类
- * @Historical version:
- * 
- **/
 public class SharedPreferencesUtils {
 
 	/** sp's name */
