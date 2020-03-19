@@ -58,7 +58,7 @@ public class SquareBrush extends ShapeBrush {
     @Override
     public Frame drawPath(Canvas canvas, @NonNull DrawingPath drawingPath, @NonNull DrawingState state) {
         updatePaint();
-        Frame pathFrame = super.drawPath1(canvas, drawingPath, state);
+        Frame pathFrame = super.drawPath1(canvas, drawingPath, state,40);
         DrawingPoint beginPoint = drawingPath.getPoints().get(0);
         if (state.isFetchFrame() || canvas == null) {
             return pathFrame;
@@ -67,15 +67,12 @@ public class SquareBrush extends ShapeBrush {
         Paint paint = new Paint();
         paint.setStrokeWidth(20);
         paint.setStyle(Paint.Style.FILL);
-        paint.setTextSize(34);
-        Paint paint1 = new Paint();
-        paint1.setARGB(255,255,255,255);
-        RectF rectF = new RectF(15,15,55,55);
-//        RectF rectF1 = new RectF(21,21,49,49);
-        rectF.offset(beginPoint.getX()-30,beginPoint.getY()-30);
-//        rectF1.offset(beginPoint.getX()-30,beginPoint.getY()-30);
+        RectF rectF = new RectF(15,15,65,65);
+        rectF.offset(beginPoint.getX()-20,beginPoint.getY()-20);
+        if (state.isCalibrateToOrigin()) {
+            rectF.offset(-pathFrame.left, -pathFrame.top);
+        }
         canvas.drawRect(rectF, paint);
-//        canvas.drawRect(rectF1, paint1);
         return pathFrame;
     }
 

@@ -4,7 +4,7 @@ import android.annotation.TargetApi;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
+import android.graphics.RectF;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
@@ -20,25 +20,25 @@ import com.vilyever.resource.Resource;
  * Feature:
  * 直线绘制
  */
-public class TriangleBrush extends ShapeBrush {
-    final TriangleBrush self = this;
+public class CircleBrushs extends ShapeBrush {
+    final CircleBrushs self = this;
     Paint _paint;
 
 
     /* #Constructors */
-    public TriangleBrush() {
+    public CircleBrushs() {
 
     }
 
-    public TriangleBrush(float size, int color) {
+    public CircleBrushs(float size, int color) {
         this(size, color, FillType.Hollow);
     }
 
-    public TriangleBrush(float size, int color, FillType fillType) {
+    public CircleBrushs(float size, int color, FillType fillType) {
         this(size, color, fillType, false);
     }
 
-    public TriangleBrush(float size, int color, FillType fillType, boolean edgeRounded) {
+    public CircleBrushs(float size, int color, FillType fillType, boolean edgeRounded) {
         super(size, color, fillType, edgeRounded);
         init();
     }
@@ -47,8 +47,8 @@ public class TriangleBrush extends ShapeBrush {
     }
 
     /* Public Methods */
-    public static TriangleBrush defaultBrush() {
-        return new TriangleBrush(Resource.getDimensionPixelSize(R.dimen.drawingViewBrushDefaultSize), Color.BLACK);
+    public static CircleBrushs defaultBrush() {
+        return new CircleBrushs(Resource.getDimensionPixelSize(R.dimen.drawingViewBrushDefaultSize), Color.BLACK);
     }
 
     /* #Overrides */
@@ -57,21 +57,21 @@ public class TriangleBrush extends ShapeBrush {
     @Override
     public Frame drawPath(Canvas canvas, @NonNull DrawingPath drawingPath, @NonNull DrawingState state) {
         updatePaint();
-        Frame pathFrame = super.drawPath(canvas, drawingPath, state);
+        Frame pathFrame = super.drawPath1(canvas, drawingPath, state,40);
         DrawingPoint beginPoint = drawingPath.getPoints().get(0);
         if (state.isFetchFrame() || canvas == null) {
             return pathFrame;
         }
 
-        Paint paint = getPaint();
+        Paint paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
+        RectF oval = new RectF(15,15,75,75);
+        oval.offset(beginPoint.getX() - 25, beginPoint.getY() - 25);
 
-        Path path=new Path();
-        path.moveTo(beginPoint.getX(),beginPoint.getY());
-        path.lineTo(beginPoint.getX()+20,beginPoint.getY()-34);
-        path.lineTo(beginPoint.getX()+40,beginPoint.getY());
-        path.close();
-        canvas.drawPath(path, paint);
+        if (state.isCalibrateToOrigin()) {
+            oval.offset(-pathFrame.left, -pathFrame.top);
+        }
+        canvas.drawOval(oval, paint);
         return pathFrame;
     }
 

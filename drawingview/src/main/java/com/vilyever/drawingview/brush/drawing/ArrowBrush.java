@@ -98,35 +98,37 @@ public class ArrowBrush extends ShapeBrush {
                 return pathFrame;
             }
 
+            Path path1 = new Path();
+            path1.moveTo(beginPoint.getX(), beginPoint.getY());
+            path1.lineTo(lastPoint.getX(), lastPoint.getY());
+//            path.reset();
             Path path = new Path();
-            path.moveTo(beginPoint.getX(), beginPoint.getY());
-            path.lineTo(lastPoint.getX(), lastPoint.getY());
-
-            Path path1=new Path();
             if (beginPoint.getX()<lastPoint.getX()&&beginPoint.getY()>lastPoint.getY()) {
-                path1.moveTo((float) (beginPoint.getX() + size * sina), (float) (beginPoint.getY() + size * sinb));
-                path1.lineTo((float) (beginPoint.getX() - Math.sqrt(size*size*3) * sinb), (float) (beginPoint.getY() + Math.sqrt(size*size*3) * sina));
-                path1.lineTo((float) (beginPoint.getX() - size * sina), (float) (beginPoint.getY() - size * sinb));
+                path.moveTo((float) (beginPoint.getX() + size * sina), (float) (beginPoint.getY() + size * sinb));
+                path.lineTo((float) (beginPoint.getX() - Math.sqrt(size*size*3) * sinb), (float) (beginPoint.getY() + Math.sqrt(size*size*3) * sina));
+                path.lineTo((float) (beginPoint.getX() - size * sina), (float) (beginPoint.getY() - size * sinb));
             } else if (beginPoint.getX()>lastPoint.getX()&&beginPoint.getY()>lastPoint.getY()) {
-                path1.moveTo((float) (beginPoint.getX() - size * sina), (float) (beginPoint.getY() + size * sinb));
-                path1.lineTo((float) (beginPoint.getX() + Math.sqrt(size*size*3) * sinb), (float) (beginPoint.getY() + Math.sqrt(size*size*3) * sina));
-                path1.lineTo((float) (beginPoint.getX() + size * sina), (float) (beginPoint.getY() - size * sinb));
+                path.moveTo((float) (beginPoint.getX() - size * sina), (float) (beginPoint.getY() + size * sinb));
+                path.lineTo((float) (beginPoint.getX() + Math.sqrt(size*size*3) * sinb), (float) (beginPoint.getY() + Math.sqrt(size*size*3) * sina));
+                path.lineTo((float) (beginPoint.getX() + size * sina), (float) (beginPoint.getY() - size * sinb));
             } else if (beginPoint.getX()>lastPoint.getX()&&beginPoint.getY()<lastPoint.getY()) {
-                path1.moveTo((float) (beginPoint.getX()-size*sina), (float) (beginPoint.getY()-size*sinb));
-                path1.lineTo((float) (beginPoint.getX()+Math.sqrt(size*size*3)*sinb), (float) (beginPoint.getY()-Math.sqrt(size*size*3)*sina));
-                path1.lineTo((float) (beginPoint.getX()+size*sina),(float) (beginPoint.getY()+size*sinb));
+                path.moveTo((float) (beginPoint.getX()-size*sina), (float) (beginPoint.getY()-size*sinb));
+                path.lineTo((float) (beginPoint.getX()+Math.sqrt(size*size*3)*sinb), (float) (beginPoint.getY()-Math.sqrt(size*size*3)*sina));
+                path.lineTo((float) (beginPoint.getX()+size*sina),(float) (beginPoint.getY()+size*sinb));
             } else {
-                path1.moveTo((float) (beginPoint.getX() - size * sina), (float) (beginPoint.getY() + size * sinb));
-                path1.lineTo((float) (beginPoint.getX() - Math.sqrt(size*size*3) * sinb), (float) (beginPoint.getY() - Math.sqrt(size*size*3) * sina));
-                path1.lineTo((float) (beginPoint.getX() + size * sina), (float) (beginPoint.getY() - size * sinb));
+                path.moveTo((float) (beginPoint.getX() - size * sina), (float) (beginPoint.getY() + size * sinb));
+                path.lineTo((float) (beginPoint.getX() - Math.sqrt(size*size*3) * sinb), (float) (beginPoint.getY() - Math.sqrt(size*size*3) * sina));
+                path.lineTo((float) (beginPoint.getX() + size * sina), (float) (beginPoint.getY() - size * sinb));
             }
-            path1.close();
-            canvas.drawPath(path1, new Paint());
+            path.close();
             if (state.isCalibrateToOrigin()) {
                 path.offset(-pathFrame.left, -pathFrame.top);
+                path1.offset(-pathFrame.left, -pathFrame.top);
             }
 
-            canvas.drawPath(path, getPaint());
+            Paint paint = getTrianglePaint();
+            canvas.drawPath(path, paint);
+            canvas.drawPath(path1, getPaint());
 
             return pathFrame;
         }
@@ -134,4 +136,12 @@ public class ArrowBrush extends ShapeBrush {
         return Frame.EmptyFrame();
     }
 
+    @NonNull
+    private Paint getTrianglePaint() {
+        Paint paint = new Paint();
+        paint.setStrokeWidth(20);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setAntiAlias(true);
+        return paint;
+    }
 }

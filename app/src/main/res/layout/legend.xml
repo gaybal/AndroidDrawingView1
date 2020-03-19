@@ -81,5 +81,22 @@
         android:layout_height="wrap_content"
         android:text="发射方向"/>
 </LinearLayout>
+<LinearLayout
+    android:id="@+id/ll_location"
+    android:layout_below="@id/ll_arrow"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dp">
+    <TextView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:text="1#"/>
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="监测点位"/>
+</LinearLayout>
 
 </RelativeLayout>

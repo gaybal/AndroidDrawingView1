@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RectF;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
@@ -56,20 +57,29 @@ public class LocationBrush extends ShapeBrush {
     @Override
     public Frame drawPath(Canvas canvas, @NonNull DrawingPath drawingPath, @NonNull DrawingState state) {
         updatePaint();
-        Frame pathFrame = super.drawPath(canvas, drawingPath, state);
+        Frame pathFrame = super.drawPath1(canvas, drawingPath, state,50);
         DrawingPoint beginPoint = drawingPath.getPoints().get(0);
         if (state.isFetchFrame() || canvas == null) {
             return pathFrame;
         }
-//        ontouchListener.touchNum(count);
+        Path path = new Path();
+        path.moveTo(beginPoint.getX(), beginPoint.getY());
+
         Paint paint = new Paint();
         paint.setStrokeWidth(2);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setTextSize(34);
+        paint.setAntiAlias(true);
 
         float textWidth = paint.measureText(num+"#");
-        float textOffset =  textWidth / 2;
-        canvas.drawText(num+"#",beginPoint.getX()-textOffset,beginPoint.getY(),paint);
+        RectF rectF = new RectF(beginPoint.getX(),beginPoint.getY(),beginPoint.getX()+textWidth+1,beginPoint.getY());
+        path.addRect(rectF, Path.Direction.CCW);
+        if (state.isCalibrateToOrigin()) {
+            path.offset(-pathFrame.left, -pathFrame.top+50);
+        }
+
+//        canvas.drawPath(path,paint);
+        canvas.drawTextOnPath(num+"#",path, 0f, 0f, paint);
         return pathFrame;
     }
     public void setNum(int num){

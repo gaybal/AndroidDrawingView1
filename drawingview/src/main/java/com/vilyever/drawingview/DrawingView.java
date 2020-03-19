@@ -1543,6 +1543,21 @@ public class DrawingView extends RelativeLayout implements View.OnLayoutChangeLi
 
         handleLayer(UnhandleAnyLayer);
     }
+    public void clearOneStrokeOneLayer() {
+        // 关闭软键盘
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getWindowToken(), 0);
+
+        cancelCurrentStep();
+
+        getLayerContainer().clear();
+
+        if (getLayerViews().size() > 1) {
+            getLayerViews().subList(1, getLayerViews().size()).clear();
+        }
+
+        handleLayer(UnhandleAnyLayer);
+    }
 
     /**
      * 依照记录的数据{@link #drawingData}进行绘制

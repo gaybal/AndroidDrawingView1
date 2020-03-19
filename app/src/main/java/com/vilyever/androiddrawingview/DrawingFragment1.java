@@ -39,7 +39,7 @@ import com.vilyever.drawingview.brush.drawing.RightAngledTriangleBrush;
 import com.vilyever.drawingview.brush.drawing.RoundedRectangleBrush;
 import com.vilyever.drawingview.brush.drawing.ShapeBrush;
 import com.vilyever.drawingview.brush.drawing.SquareBrush;
-import com.vilyever.drawingview.brush.drawing.TriangleBrush;
+import com.vilyever.drawingview.brush.drawing.CircleBrushs;
 import com.vilyever.drawingview.brush.drawing.TriangleStrokeBrush;
 import com.vilyever.drawingview.brush.text.TextBrush;
 import com.vilyever.drawingview.model.DrawingStep;
@@ -95,7 +95,7 @@ public class DrawingFragment1 extends Fragment implements View.OnClickListener ,
     LocationBrush locationBrush;
     SquareBrush squareBrush;
     TriangleStrokeBrush triangleStrokeBrush;
-    TriangleBrush triangleBrush;
+    CircleBrushs circleBrushs;
     RelativeLayout legend;
     int locationNum = 1;
     public DrawingFragment1() {
@@ -118,6 +118,7 @@ Handler handler = new Handler(){
                         legend.findViewById(R.id.ll_lt).setVisibility(checkedItems[1]?View.VISIBLE:View.GONE);
                         legend.findViewById(R.id.ll_dx).setVisibility(checkedItems[2]?View.VISIBLE:View.GONE);
                         legend.findViewById(R.id.ll_arrow).setVisibility(checkedItems[3]?View.VISIBLE:View.GONE);
+                        legend.findViewById(R.id.ll_location).setVisibility(checkedItems[4]?View.VISIBLE:View.GONE);
                         drawingView.addView(legend);
                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) legend.getLayoutParams();
                         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -165,6 +166,7 @@ Handler handler = new Handler(){
         self.ltButton.setOnClickListener(this);
         self.dxButton = (Button) rootView.findViewById(R.id.dxButton);
         self.dxButton.setOnClickListener(this);
+        self.dxButton.setVisibility(View.GONE);
         self.lineButton = (Button) rootView.findViewById(R.id.lineButton);
         self.lineButton.setOnClickListener(this);
         self.rectButton = (Button) rootView.findViewById(R.id.rectButton);
@@ -211,8 +213,8 @@ Handler handler = new Handler(){
         self.shapeBrushes.add(squareBrush);
         triangleStrokeBrush = TriangleStrokeBrush.defaultBrush();
         self.shapeBrushes.add(triangleStrokeBrush);
-        triangleBrush = TriangleBrush.defaultBrush();
-        self.shapeBrushes.add(triangleBrush);
+        circleBrushs = CircleBrushs.defaultBrush();
+        self.shapeBrushes.add(circleBrushs);
         self.penBrush = PenBrush.defaultBrush();
         self.drawingView.setBrush(self.penBrush);
         self.singleSelectionButtons = new ArrayList<>();
@@ -313,12 +315,11 @@ Handler handler = new Handler(){
                 setBackground();
                 self.drawingView.clear();
                 drawingView.removeView(legend);
-//                drawingView.setDrawingStepDelegate(null);
                 break;
             case R.id.penButton:
                 self.penBrush.setIsEraser(false);
-                if (size!=-1) {
-                self.penBrush.setSize(size);
+                if (size!=-1 &&size!=15) {
+                    self.penBrush.setSize(size);
                 }
                 self.selectButton(self.singleSelectionButtons, self.penButton);
                 self.drawingView.setBrush(self.penBrush);
@@ -339,6 +340,7 @@ Handler handler = new Handler(){
                 break;
             case R.id.oneStrokeOneLayerButton:
                 v.setSelected(!v.isSelected());
+                if (size!=-1)  self.penBrush.setSize(size);
                 self.penBrush.setOneStrokeToLayer(v.isSelected());
                 self.textBrush.setOneStrokeToLayer(v.isSelected());
                 for (DrawingBrush brush : self.shapeBrushes) {
@@ -351,7 +353,7 @@ Handler handler = new Handler(){
                 break;
             case R.id.ltButton:
                 self.selectButton(self.singleSelectionButtons, self.ltButton);
-                self.drawingView.setBrush(self.triangleBrush);
+                self.drawingView.setBrush(self.circleBrushs);
                 break;
             case R.id.dxButton:
                 self.selectButton(self.singleSelectionButtons, self.dxButton);
@@ -385,6 +387,8 @@ Handler handler = new Handler(){
                 //避免保存时图片有键盘光标
                 self.selectButton(self.singleSelectionButtons, self.ydButton);
                 self.drawingView.setBrush(self.squareBrush);
+                //避免保存时有图层
+                drawingView.getHandlingLayerView().setHandling(false);
                 savePic();
                 break;
             case R.id.legendButton:
@@ -404,15 +408,14 @@ Handler handler = new Handler(){
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     boolean[] checkedItems;
     private void legendDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("请选择要生成的图例！");
-        final String items[] = {"移动","联通","电信","箭头"};
-        checkedItems = new boolean[]{false,false,false,false};
+        final String items[] = {"移动","联通","电信","箭头","监测点位"};
+        checkedItems = new boolean[]{false,false,false,false,false};
         builder.setMultiChoiceItems(items, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which, boolean isChecked) {
